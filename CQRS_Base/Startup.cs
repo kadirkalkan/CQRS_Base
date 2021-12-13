@@ -1,6 +1,7 @@
 using CQRS_Base.CQRS.Handlers.CommandHandlers;
 using CQRS_Base.CQRS.Handlers.QueryHandlers;
 using CQRS_Base.Models.Data;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -33,12 +34,9 @@ namespace CQRS_Base
             services.AddControllers();
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration.GetConnectionString("conString")));
 
-            services.AddTransient<CreateProductCommandHandler>();
-            services.AddTransient<DeleteProductCommandHandler>();
-            services.AddTransient<GetAllProductQueryHandler>();
-            services.AddTransient<GetByIdProductQueryHandler>();
-            
-            
+            services.AddMediatR(typeof(DatabaseContext));
+
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CQRS_Base", Version = "v1" });

@@ -1,15 +1,17 @@
 ﻿using CQRS_Base.CQRS.Queries.Request;
 using CQRS_Base.CQRS.Queries.Response;
 using CQRS_Base.Models.Data;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CQRS_Base.CQRS.Handlers.QueryHandlers
 {
-    public class GetAllProductQueryHandler
+    public class GetAllProductQueryHandler : IRequestHandler<GetAllProductQueryRequest, List<GetAllProductQueryResponse>>
     {
         readonly DatabaseContext _context;
         public GetAllProductQueryHandler([FromServices] DatabaseContext context)
@@ -17,7 +19,7 @@ namespace CQRS_Base.CQRS.Handlers.QueryHandlers
             _context = context;
         }
 
-        public List<GetAllProductQueryResponse> GetAllProducts(GetAllProductQueryRequest request)
+        public async Task<List<GetAllProductQueryResponse>> Handle(GetAllProductQueryRequest request, CancellationToken cancellationToken)
         {
             return _context.Products.Select(x => new GetAllProductQueryResponse()
             {
